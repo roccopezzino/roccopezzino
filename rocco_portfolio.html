@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rocco Pezzino | Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-light: #e8cc7a;
+    --rust: #b84c1e;
+    --charcoal: #1c1c1c;
+    --mid: #2e2e2e;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease, width 0.2s, height 0.2s;
+    opacity: 0.5;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 4rem;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    opacity: 0.7;
+    transition: opacity 0.2s, color 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 8rem 4rem 4rem;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 80% 50%, rgba(201,168,76,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(184,76,30,0.06) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-number {
+    position: absolute;
+    right: 4rem; top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(12rem, 22vw, 22rem);
+    color: rgba(201,168,76,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 0.4rem 1rem;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.2s forwards;
+  }
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 12vw, 11rem);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.4s forwards;
+  }
+  .hero-name span { color: var(--gold); }
+  .hero-sub {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    color: rgba(245,240,232,0.55);
+    margin-top: 1.2rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.6s forwards;
+  }
+  .hero-desc {
+    margin-top: 1.8rem;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: rgba(245,240,232,0.65);
+    max-width: 520px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.8s forwards;
+  }
+  .hero-cta {
+    margin-top: 2.5rem;
+    display: flex; gap: 1.2rem; flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.7s 1s forwards;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--black);
+    padding: 0.85rem 2.2rem;
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .btn-outline {
+    border: 1px solid rgba(245,240,232,0.3);
+    color: var(--white);
+    padding: 0.85rem 2.2rem;
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* SECTIONS */
+  section { padding: 6rem 4rem; }
+  .section-label {
+    font-size: 0.72rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    line-height: 1;
+    letter-spacing: 2px;
+    margin-bottom: 3rem;
+  }
+  .divider {
+    width: 60px; height: 2px;
+    background: var(--gold);
+    margin-bottom: 3rem;
+  }
+
+  /* ABOUT */
+  #about { background: var(--charcoal); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .about-text p {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: rgba(245,240,232,0.75);
+    margin-bottom: 1.2rem;
+  }
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  .stat-card {
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 2rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--gold);
+  }
+  .stat-card:hover { border-color: var(--gold); }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.5);
+    margin-top: 0.5rem;
+  }
+
+  /* SKILLS */
+  #skills { background: var(--black); }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .skill-card {
+    background: var(--charcoal);
+    padding: 2.5rem 2rem;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--gold);
+    transition: width 0.4s ease;
+  }
+  .skill-card:hover::after { width: 100%; }
+  .skill-card:hover { transform: translateY(-4px); }
+  .skill-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+  .skill-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 0.8rem;
+  }
+  .skill-desc {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.55);
+  }
+
+  /* EXPERIENCE */
+  #experience { background: var(--charcoal); }
+  .exp-list { display: flex; flex-direction: column; gap: 0; }
+  .exp-item {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 3rem;
+    padding: 2.5rem 0;
+    border-top: 1px solid rgba(245,240,232,0.08);
+    transition: background 0.3s;
+    position: relative;
+  }
+  .exp-item:last-child { border-bottom: 1px solid rgba(245,240,232,0.08); }
+  .exp-item:hover .exp-company { color: var(--gold); }
+  .exp-year {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.35);
+    padding-top: 0.4rem;
+  }
+  .exp-company {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    transition: color 0.3s;
+    margin-bottom: 0.4rem;
+  }
+  .exp-role {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+  .exp-desc {
+    font-size: 0.92rem;
+    line-height: 1.8;
+    color: rgba(245,240,232,0.6);
+  }
+
+  /* EDUCATION */
+  #education { background: var(--black); }
+  .edu-card {
+    background: var(--charcoal);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3rem;
+    align-items: center;
+    padding: 3.5rem;
+    border-left: 4px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .edu-card::before {
+    content: 'R';
+    position: absolute;
+    right: 5rem; top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 12rem;
+    color: rgba(201,168,76,0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .edu-school {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    letter-spacing: 3px;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .edu-degree {
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .edu-detail {
+    font-size: 0.95rem;
+    color: rgba(245,240,232,0.6);
+    line-height: 1.7;
+  }
+  .edu-year-badge {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 0.6rem 1.2rem;
+    white-space: nowrap;
+    z-index: 1;
+  }
+
+  /* CONTACT */
+  #contact { background: var(--charcoal); }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .contact-left p {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: rgba(245,240,232,0.65);
+    margin-bottom: 2.5rem;
+  }
+  .contact-email {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    padding-bottom: 0.4rem;
+    transition: border-color 0.3s;
+    display: inline-block;
+    word-break: break-all;
+  }
+  .contact-email:hover { border-color: var(--gold); }
+  .contact-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(201,168,76,0.15);
+    transition: border-color 0.3s;
+  }
+  .contact-item:hover { border-color: var(--gold); }
+  .contact-item-icon { font-size: 1.5rem; }
+  .contact-item-label {
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+    margin-bottom: 0.2rem;
+  }
+  .contact-item-val {
+    font-size: 0.95rem;
+    color: var(--white);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    padding: 2.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(245,240,232,0.06);
+  }
+  footer p {
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    color: rgba(245,240,232,0.3);
+  }
+  footer span { color: var(--gold); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    section { padding: 4rem 2rem; }
+    .hero { padding: 8rem 2rem 4rem; }
+    .about-grid, .contact-grid, .skills-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    .edu-card { grid-template-columns: 1fr; gap: 1.5rem; }
+    .hero-number { display: none; }
+    footer { flex-direction: column; gap: 0.8rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">R.P.</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-number">RP</div>
+  <div class="hero-content">
+    <div class="hero-tag">Finance & Real Estate</div>
+    <h1 class="hero-name">ROCCO<br><span>PEZZINO</span></h1>
+    <p class="hero-sub">Future Real Estate Professional</p>
+    <p class="hero-desc">Rutgers Business School freshman with a passion for finance, real estate, and building meaningful connections with people from all walks of life.</p>
+    <div class="hero-cta">
+      <a href="#experience" class="btn-primary">View My Work</a>
+      <a href="#contact" class="btn-outline">Get In Touch</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <div class="section-label">Who I Am</div>
+      <h2 class="section-title">ABOUT ME</h2>
+      <div class="divider"></div>
+      <p>I'm Rocco Pezzino — a driven freshman at Rutgers Business School studying Finance with a concentration in Real Estate. I believe in hard work, faith, and building genuine relationships.</p>
+      <p>My Christian values guide everything I do, from how I treat customers at ShopRite to how I show up for clients at Coldwell Banker. I'm ambitious, people-first, and always working toward the next goal.</p>
+      <p>When I'm not studying or working, you'll find me on the basketball court — the same competitive mindset I bring to the game, I bring to my career.</p>
+    </div>
+    <div class="about-stats reveal">
+      <div class="stat-card">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Jobs & Internships</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Drive & Ambition</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">RE</div>
+        <div class="stat-label">License In Progress</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">1st</div>
+        <div class="stat-label">Year at Rutgers</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label reveal">What I Bring</div>
+  <h2 class="section-title reveal">SKILLS</h2>
+  <div class="divider reveal"></div>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <span class="skill-icon">🤝</span>
+      <div class="skill-name">Team Leadership & Training</div>
+      <p class="skill-desc">Experience training new team members and leading by example. I build others up and create environments where everyone can perform at their best.</p>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-icon">💬</span>
+      <div class="skill-name">Communication & Networking</div>
+      <p class="skill-desc">Comfortable connecting with anyone — from customers to clients to colleagues. I know how to listen, engage, and leave a lasting impression.</p>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-icon">⭐</span>
+      <div class="skill-name">Customer Service</div>
+      <p class="skill-desc">Years of experience working with diverse customers across multiple industries. I handle every interaction with patience, professionalism, and genuine care.</p>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-icon">🏠</span>
+      <div class="skill-name">Real Estate Knowledge</div>
+      <p class="skill-desc">Actively pursuing my real estate license and gaining hands-on experience at Coldwell Banker Realty. Building the foundation for a long-term career in property.</p>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-icon">💰</span>
+      <div class="skill-name">Finance Fundamentals</div>
+      <p class="skill-desc">Studying Finance at Rutgers Business School with a real estate concentration — applying classroom knowledge to real-world situations every day.</p>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-icon">🧠</span>
+      <div class="skill-name">Adaptability</div>
+      <p class="skill-desc">Working across three different jobs simultaneously — grocery delivery, moving logistics, and real estate — has sharpened my ability to adapt fast and stay sharp.</p>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label reveal">Where I've Been</div>
+  <h2 class="section-title reveal">EXPERIENCE</h2>
+  <div class="divider reveal"></div>
+  <div class="exp-list">
+    <div class="exp-item reveal">
+      <div class="exp-year">Current</div>
+      <div>
+        <div class="exp-company">Coldwell Banker Realty</div>
+        <div class="exp-role">Real Estate Intern</div>
+        <p class="exp-desc">Gaining firsthand exposure to the real estate industry alongside experienced agents. Supporting client interactions, learning property valuation, and building the knowledge base to launch my own real estate career. Currently working toward obtaining my real estate license.</p>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-year">Current</div>
+      <div>
+        <div class="exp-company">ShopRite</div>
+        <div class="exp-role">Shop From Home Associate</div>
+        <p class="exp-desc">Responsible for fulfilling customer online grocery orders, picking and packing with accuracy, and delivering orders directly to customers. Also involved in training new employees and ensuring an exceptional customer experience from start to finish.</p>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-year">Current</div>
+      <div>
+        <div class="exp-company">Independent Moving Co.</div>
+        <div class="exp-role">Mover</div>
+        <p class="exp-desc">Working with a team on residential and commercial moving jobs. Building physical endurance, time management, and teamwork skills while delivering a stress-free moving experience for clients.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-label reveal">My Foundation</div>
+  <h2 class="section-title reveal">EDUCATION</h2>
+  <div class="divider reveal"></div>
+  <div class="edu-card reveal">
+    <div>
+      <div class="edu-school">Rutgers Business School</div>
+      <div class="edu-degree">B.S. in Finance — Real Estate Concentration</div>
+      <p class="edu-detail">
+        Rutgers University — New Brunswick, NJ<br>
+        Currently a freshman building a strong academic foundation in financial analysis, real estate markets, and business strategy. Combining classroom learning with real-world internship experience at Coldwell Banker Realty.
+      </p>
+    </div>
+    <div class="edu-year-badge">Class of 2028</div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-left reveal">
+      <div class="section-label">Let's Connect</div>
+      <h2 class="section-title">GET IN<br>TOUCH</h2>
+      <div class="divider"></div>
+      <p>Whether you're looking to discuss real estate, finance opportunities, or just want to connect — my inbox is always open. Let's build something great together.</p>
+      <a href="mailto:rap379@scarletmail.rutgers.edu" class="contact-email">rap379@scarletmail.rutgers.edu</a>
+    </div>
+    <div class="contact-right reveal">
+      <div class="contact-item">
+        <div class="contact-item-icon">📍</div>
+        <div>
+          <div class="contact-item-label">Location</div>
+          <div class="contact-item-val">New Brunswick, NJ — Rutgers University</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">🎓</div>
+        <div>
+          <div class="contact-item-label">School</div>
+          <div class="contact-item-val">Rutgers Business School</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">🏠</div>
+        <div>
+          <div class="contact-item-label">Internship</div>
+          <div class="contact-item-val">Coldwell Banker Realty</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">📜</div>
+        <div>
+          <div class="contact-item-label">In Progress</div>
+          <div class="contact-item-val">Real Estate License</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 <span>Rocco Pezzino</span>. All rights reserved.</p>
+  <p>Built with purpose & <span>ambition</span>.</p>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    setTimeout(() => {
+      ring.style.left = e.clientX + 'px';
+      ring.style.top = e.clientY + 'px';
+    }, 60);
+  });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      ring.style.width = '56px';
+      ring.style.height = '56px';
+      ring.style.opacity = '0.8';
+    });
+    el.addEventListener('mouseleave', () => {
+      ring.style.width = '36px';
+      ring.style.height = '36px';
+      ring.style.opacity = '0.5';
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
